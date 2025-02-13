@@ -2,8 +2,9 @@ const clientRect = document
     .querySelector(".frame-size")
     .getBoundingClientRect();
 export default class Banner {
-    constructor({ left, top, width, plugin, id, widthOfPosition }) {
+    constructor({ left, top, width, plugin, id, widthOfPosition, $frame }) {
         this.plugin = plugin;
+        this.$frame = $frame;
         this.initState(
             left,
             top,
@@ -20,11 +21,12 @@ export default class Banner {
         this.pageY = top;
         this.activeMove = false;
         this.activeResize = false;
-        this.widthOfFrame = 500 || clientRect.width;
-        this.heightOfFrame = 2924 || clientRect.width;
-        this.widthOfPosition = widthOfPosition;
         this.width = width;
+        this.widthOfPosition = widthOfPosition;
         this.id = id;
+        const clientRect = this.$frame.getBoundingClientRect();
+        this.widthOfFrame =  clientRect.width;
+        this.heightOfFrame =  clientRect.height;
     }
 
     initDOM() {
@@ -38,7 +40,8 @@ export default class Banner {
         this.$element.style.width = `${this.width}%`;
 
         this.$element.dataset.id = this.id;
-        document.querySelector(".animation-editor").appendChild(this.$element);
+        this.$frame.appendChild(this.$element);
+        
     }
 
     getResize() {

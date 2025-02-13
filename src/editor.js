@@ -7,7 +7,8 @@ export default class Editor {
     }
 
     initState(plugins) {
-        const { width, height } = document.querySelector('.frame-size').getBoundingClientRect()
+        this.$element = document.querySelector('.animation-editor');
+        const { width, height, top, left } = this.$element.getBoundingClientRect();
         this.plugins = plugins;
         this.frameWidth = width;
         this.frameHeight = height;
@@ -16,6 +17,7 @@ export default class Editor {
     initContextMenu() {
         this.$contextMenu = document.createElement('div');
         this.$contextMenu.className = 'context-menu';
+        const { width, height, top, left } = this.$element.getBoundingClientRect();
         Object.keys(this.plugins).forEach((plugin) => {
             const $item = document.createElement('div');
             $item.className = 'context-menu-item';
@@ -23,12 +25,13 @@ export default class Editor {
             this.$contextMenu.appendChild($item);
 
             $item.addEventListener('click', (e) => {
+                console.log(height);
                 const { pageX, pageY, target } = e;
-                console.log(pageX- (this.frameWidth - 500) / 2);
                 const banner = new Banner({
-                    left: pageX - (this.frameWidth - 500) / 2 / 500 * 100,
-                    top: 0,
+                    left: (pageX - left) / width * 100,
+                    top:  (pageY + top) / height * 100,
                     plugin: new this.plugins[plugin](),
+                    $frame: this.$element
                 });
             });
         });
@@ -59,6 +62,7 @@ export default class Editor {
                 width: item.width,
                 widthOfPosition: item.widthOfPosition,
                 plugin: new this.plugins[item.setting.plugin](),
+                $frame: this.$element,
             })
         });
     }
