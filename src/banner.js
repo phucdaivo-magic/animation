@@ -1,17 +1,16 @@
- 
-const clientRect = document.querySelector('.frame-size').getBoundingClientRect()
+const clientRect = document
+    .querySelector(".frame-size")
+    .getBoundingClientRect();
 export default class Banner {
-    constructor({
-        left,
-        top,
-        width,
-        plugin,
-        id,
-        widthOfPosition,
-    }) {
- 
+    constructor({ left, top, width, plugin, id, widthOfPosition }) {
         this.plugin = plugin;
-        this.initState(left, top, id || new Date().getTime(), widthOfPosition || clientRect.width, width);
+        this.initState(
+            left,
+            top,
+            id || new Date().getTime(),
+            widthOfPosition || clientRect.width,
+            width
+        );
         this.initDOM();
         this.registerEvent();
     }
@@ -21,63 +20,69 @@ export default class Banner {
         this.pageY = top;
         this.activeMove = false;
         this.activeResize = false;
-        this.widthOfFrame = clientRect.width;
+        this.widthOfFrame = 500 || clientRect.width;
+        this.heightOfFrame = 2924 || clientRect.width;
         this.widthOfPosition = widthOfPosition;
         this.width = width;
         this.id = id;
     }
 
     initDOM() {
-        this.$element = document.createElement('div');
+        this.$element = document.createElement("div");
         this.$element.appendChild(this.plugin.getTempate());
         this.$element.appendChild(this.getResize());
-        this.$element.className = 'banner-tor';
+        this.$element.className = "banner-tor";
         const k = this.widthOfFrame / this.widthOfPosition;
-        this.$element.style.left = `${this.pageX * k / this.widthOfFrame * 100}vw`;
-        this.$element.style.top = `${this.pageY * k / this.widthOfFrame * 100}vw`;
-        this.$element.style.width = `${this.width * k / this.widthOfFrame * 100 }vw`;
+        this.$element.style.left = `${this.pageX}%`;
+        this.$element.style.top = `${this.pageY}%`;
+        this.$element.style.width = `${this.width}%`;
+
         this.$element.dataset.id = this.id;
-        document.body.appendChild(this.$element);
+        document.querySelector(".animation-editor").appendChild(this.$element);
     }
 
     getResize() {
-        this.$resize = document.createElement('div');
-        this.$resize.className = 'banner-resize';
+        this.$resize = document.createElement("div");
+        this.$resize.className = "banner-resize";
 
-        this.$resize.addEventListener('mousedown', () => {
+        this.$resize.addEventListener("mousedown", (event) => {
             this.activeMove = false;
             this.activeResize = true;
+            const { clientX } = event;
+            this.clientX = clientX;
+            this.clientWidth = this.$element.offsetWidth;
         });
 
-        document.addEventListener('mousemove', (event) => {
+        document.addEventListener("mousemove", (event) => {
+
             if (this.activeResize) {
                 const { clientX } = event;
-                const width = clientX - this.$element.offsetLeft;
+                console.log(this.clientWidth)
+                const width = clientX - this.clientX + this.clientWidth;
                 this.$element.style.width = `${width}px`;
             }
         });
 
         document.addEventListener("mouseup", (event) => {
-            
             if (this.activeResize) {
-                const { clientX } = event;
-                const _width = clientX - this.$element.offsetLeft;
-                this.$element.style.width = `${_width / this.widthOfFrame * 100}vw`;
-                this.width = _width
-
+                const { offsetLeft, offsetTop, offsetWidth } = this.$element;
+                console.log(offsetLeft);
+                const { width, top, left } = this.getSizeByFrame({ width: offsetWidth, top: offsetTop, left: offsetLeft })
+                this.$element.style.width = `${width}%`;
+                this.width = width;
                 // Save
                 window._banner = window._banner || {};
                 window._banner[this.id] = {
-                    left: this.$element.offsetLeft,
-                    top: this.$element.offsetTop,
-                    width: this.$element.offsetWidth,
+                    width,
+                    top,
+                    left,
                     widthOfPosition: this.widthOfPosition,
                     setting: {
                         plugin: this.plugin.constructor.name,
-                    }
+                    },
                 };
 
-                localStorage.setItem('_banner', JSON.stringify(window._banner));
+                localStorage.setItem("_banner", JSON.stringify(window._banner));
             }
         });
 
@@ -85,29 +90,28 @@ export default class Banner {
     }
 
     registerEvent() {
-        this.$element.addEventListener('click', (event) => {
+        this.$element.addEventListener("click", (event) => {
             window._banner_remove = this.id;
         });
 
-        document.addEventListener('keyup', ({code}) => {
-            if (code === 'Backspace' && window._banner_remove) {
+        document.addEventListener("keyup", ({ code }) => {
+            if (code === "Backspace" && window._banner_remove) {
                 document.querySelector(`[data-id="${window._banner_remove}"]`).remove();
                 window._banner = window._banner || {};
                 delete window._banner[window._banner_remove];
                 // Save
-                localStorage.setItem('_banner', JSON.stringify(window._banner));
+                localStorage.setItem("_banner", JSON.stringify(window._banner));
                 window._banner_remove = null;
             }
-             
         });
 
-        this.$element.addEventListener('mousedown', (event) => {
+        this.$element.addEventListener("mousedown", (event) => {
             this.activeMove = true;
             this.pageX = event.clientX - this.$element.offsetLeft;
             this.pageY = event.clientY - this.$element.offsetTop;
         });
 
-        document.addEventListener('mousemove', (event) => {
+        document.addEventListener("mousemove", (event) => {
             if (this.activeMove && !this.activeResize) {
                 const { clientX, clientY } = event;
                 this.left = clientX - this.pageX;
@@ -116,26 +120,37 @@ export default class Banner {
                 this.$element.style.top = `${clientY - this.pageY}px`;
             }
         });
+
         document.addEventListener("mouseup", () => {
             if (!this.activeResize && this.activeMove) {
-                this.$element.style.left = `${this.left / this.widthOfFrame * 100}vw`;
-                this.$element.style.top = `${this.top / this.widthOfFrame * 100}vw`;
+                this.$element.style.left = `${(this.left / this.widthOfFrame) * 100}%`;
+                this.$element.style.top = `${(this.top / this.heightOfFrame) * 100}%`;
                 // Save
+                const { offsetLeft, offsetTop, offsetWidth } = this.$element;
+                const { width, top, left } = this.getSizeByFrame({ width: offsetWidth, top: offsetTop, left: offsetLeft });
                 window._banner = window._banner || {};
                 window._banner[this.id] = {
-                    left: this.$element.offsetLeft,
-                    top: this.$element.offsetTop,
-                    width: this.$element.offsetWidth,
+                    left,
+                    top,
+                    width,
                     widthOfPosition: this.widthOfFrame,
                     setting: {
                         plugin: this.plugin.constructor.name,
-                    }
+                    },
                 };
 
-                localStorage.setItem('_banner', JSON.stringify(window._banner));
+                localStorage.setItem("_banner", JSON.stringify(window._banner));
             }
             this.activeMove = false;
             this.activeResize = false;
         });
+    }
+
+    getSizeByFrame({ width, top, left }) {
+        return {
+            width: (width / this.widthOfFrame) * 100,
+            top: (top / this.heightOfFrame) * 100,
+            left: (left / this.widthOfFrame) * 100,
+        };
     }
 }

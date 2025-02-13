@@ -24,9 +24,10 @@ export default class Editor {
 
             $item.addEventListener('click', (e) => {
                 const { pageX, pageY, target } = e;
+                console.log(pageX- (this.frameWidth - 500) / 2);
                 const banner = new Banner({
-                    left: pageX,
-                    top: pageY,
+                    left: pageX - (this.frameWidth - 500) / 2 / 500 * 100,
+                    top: 0,
                     plugin: new this.plugins[plugin](),
                 });
             });
