@@ -66,7 +66,7 @@ body {
 }
 
 .banner-tor:hover {
-    outline: 3px #ccc dotted;
+    outline: 2px #ccc dashed;
 }
 
 .banner-tor:after {

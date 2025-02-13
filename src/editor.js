@@ -13,10 +13,6 @@ export default class Editor {
         this.frameHeight = height;
     }
 
-    initPlugin() {
-        this.createContextMenu();
-    }
-
     initContextMenu() {
         this.$contextMenu = document.createElement('div');
         this.$contextMenu.className = 'context-menu';
@@ -31,7 +27,7 @@ export default class Editor {
                 const banner = new Banner({
                     left: pageX,
                     top: pageY,
-                    plugin: new this.plugins[plugin]()
+                    plugin: new this.plugins[plugin](),
                 });
             });
         });
@@ -56,10 +52,12 @@ export default class Editor {
         Object.keys(window._banner).forEach((key) => {
             const item = window._banner[key];
             const banner = new Banner({
+                id: key,
                 left: item.left,
                 top: item.top,
+                width: item.width,
+                widthOfPosition: item.widthOfPosition,
                 plugin: new this.plugins[item.setting.plugin](),
-                widthSetting: item.width
             })
         });
     }
