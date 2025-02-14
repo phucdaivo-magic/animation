@@ -6,14 +6,24 @@ import ImageBanner from "./plugins/image-banner";
 import LinkBanner from "./plugins/link-banner";
 import GoalBanner from "./plugins/goal-banner";
 import HouseBanner from "./plugins/house-banner";
+import Matrix from "./matrix";
 
-const editor = new Editor({
-    BallonBanner,
-    LinkBanner,
-    ImageBanner,
-    HomeBanner,
-    FinishBanner,
-    HouseBanner,
-    GoalBanner
+const runEditor = () => {
+    const editor = new Editor({
+        $element: document.querySelector('.animation-editor'),
+        plugins: {
+            BallonBanner,
+            LinkBanner,
+            ImageBanner,
+            HomeBanner,
+            FinishBanner,
+            HouseBanner,
+            GoalBanner
+        }
+    });
+}
 
+const matrix = new Matrix({
+    $element: document.querySelector('.matrix-editor')
 });
+

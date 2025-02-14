@@ -1,13 +1,13 @@
 import Banner from "./banner";
 export default class Editor {
-    constructor(plugins) {
-        this.initState(plugins);
+    constructor({ plugins, $element }) {
+        this.initState(plugins, $element);
         this.initContextMenu();
         this.initBanner();
     }
 
-    initState(plugins) {
-        this.$element = document.querySelector('.animation-editor');
+    initState(plugins, $element) {
+        this.$element = $element;
         const { width, height, top, left } = this.$element.getBoundingClientRect();
         this.plugins = plugins;
         this.frameWidth = width;
@@ -17,26 +17,26 @@ export default class Editor {
     initContextMenu() {
         this.$contextMenu = document.createElement('div');
         this.$contextMenu.className = 'context-menu';
-        const { width, height, top, left } = this.$element.getBoundingClientRect();
+
         Object.keys(this.plugins).forEach((plugin) => {
             const $item = document.createElement('div');
             $item.className = 'context-menu-item';
             $item.innerText = plugin;
             this.$contextMenu.appendChild($item);
 
-            $item.addEventListener('click', (e) => {
-                console.log(height);
-                const { pageX, pageY, target } = e;
+            $item.addEventListener('click', ({ pageX, pageY }) => {
+                const { width, height, top, left } = this.$element.getBoundingClientRect();
+                const { x, y } = this.getPostion({ top, left });
                 const banner = new Banner({
-                    left: (pageX - left) / width * 100,
-                    top:  (pageY + top) / height * 100,
+                    left: (pageX - x) / width * 100,
+                    top: (pageY - y) / height * 100,
                     plugin: new this.plugins[plugin](),
                     $frame: this.$element
                 });
             });
         });
 
-        document.addEventListener("contextmenu", (event) => {
+        this.$element.addEventListener("contextmenu", (event) => {
             event.preventDefault();
             const { clientX, clientY } = event;
             this.$contextMenu.style.top = `${clientY}px`;
@@ -49,6 +49,15 @@ export default class Editor {
         });
 
         document.body.appendChild(this.$contextMenu);
+    }
+
+    getPostion({ top, left }) {
+        const $contentScroll = document.querySelector('html');
+        const { scrollTop, scrollLeft } = $contentScroll;
+        return {
+            y: top + scrollTop,
+            x: left + scrollLeft
+        }
     }
 
     initBanner() {
