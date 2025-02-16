@@ -3,8 +3,8 @@ body {
 }
 
 .point {
-    width: 3px;
-    height: 3px;
+    width: 1px;
+    height: 1px;
     background: green;
     position: absolute;
     border-radius: 100px;
@@ -17,11 +17,11 @@ body {
 }
 
 .character {
-    width: 1px;
-    height: 50px;
-    background: red;
+    width: 9%;
+    /* height: 50px; */
+    /* background: red; */
     position: absolute;
-    /* display: none; */
+    /* display: none; */ 
 }
 
 .frame-size {
@@ -35,9 +35,9 @@ body {
 }
 
 .character img {
-    width: 9%;
-    margin-top: -4.5%;
-    margin-left: -4.5%;
+    width: 100%;
+    margin-top: -45%;
+    margin-left: -45%;
 }
 
 .context-menu {
@@ -120,7 +120,7 @@ body {
     max-width: 600px;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
     margin: auto;
-    margin-top: 100px;
+    /* margin-top: 100px; */
     position: relative;
     overflow: hidden;
 }

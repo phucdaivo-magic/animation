@@ -23,6 +23,8 @@ const runEditor = () => {
     });
 }
 
+runEditor()
+
 const matrix = new Matrix({
     $element: document.querySelector('.matrix-editor')
 });

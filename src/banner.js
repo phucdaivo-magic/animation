@@ -68,15 +68,15 @@ export default class Banner {
         document.addEventListener("mouseup", (event) => {
             if (this.activeResize) {
                 const { offsetLeft, offsetTop, offsetWidth } = this.$element;
-                const { width, top, left } = this.getSizeByFrame({ width: offsetWidth, top: offsetTop, left: offsetLeft })
+                const { width } = this.getSizeByFrame({ width: offsetWidth, top: offsetTop, left: offsetLeft })
                 this.$element.style.width = `${width}%`;
                 this.width = width;
                 // Save
                 window._banner = window._banner || {};
                 window._banner[this.id] = {
                     width,
-                    top,
-                    left,
+                    top: window._banner[this.id].top,
+                    left: window._banner[this.id].left,
                     widthOfPosition: this.widthOfPosition,
                     setting: {
                         plugin: this.plugin.constructor.name,
