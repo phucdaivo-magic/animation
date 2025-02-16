@@ -7,8 +7,9 @@ import LinkBanner from "./plugins/link-banner";
 import GoalBanner from "./plugins/goal-banner";
 import HouseBanner from "./plugins/house-banner";
 import Matrix from "./matrix";
+import Character from "./charactor";
 
-const runEditor = () => {
+const runBannerEditor = () => {
     const editor = new Editor({
         $element: document.querySelector('.animation-editor'),
         plugins: {
@@ -22,10 +23,20 @@ const runEditor = () => {
         }
     });
 }
+const runMapEditor = () => {
+    const matrix = new Matrix({
+        $frame: document.querySelector('.matrix-editor')
+    });
+    // matrix.registerEvent();
+}
 
-runEditor()
+const runAnimation = () => {
+    const character = new Character({
+        $frame: document.querySelector('.matrix-editor'),
+    });
+}
 
-const matrix = new Matrix({
-    $element: document.querySelector('.matrix-editor')
-});
+runBannerEditor();
+runMapEditor();
+runAnimation();
 

@@ -3,11 +3,12 @@ body {
 }
 
 .point {
-    width: 1px;
-    height: 1px;
+    width: 2px;
+    height: 2px;
     background: green;
     position: absolute;
     border-radius: 100px;
+    opacity: 0;
 }
 
 .point.active {
@@ -117,7 +118,7 @@ body {
 }
 
 .animation-editor {
-    max-width: 600px;
+    max-width: 100%;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
     margin: auto;
     /* margin-top: 100px; */

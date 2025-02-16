@@ -1,6 +1,3 @@
-const clientRect = document
-    .querySelector(".frame-size")
-    .getBoundingClientRect();
 export default class Banner {
     constructor({ left, top, width, plugin, id, widthOfPosition, $frame }) {
         this.plugin = plugin;
@@ -55,7 +52,6 @@ export default class Banner {
         });
 
         document.addEventListener("mousemove", (event) => {
-
             if (this.activeResize) {
                 const { clientX } = event;
                 console.log(this.clientWidth)
@@ -67,8 +63,8 @@ export default class Banner {
         // resize
         document.addEventListener("mouseup", (event) => {
             if (this.activeResize) {
-                const { offsetLeft, offsetTop, offsetWidth } = this.$element;
-                const { width } = this.getSizeByFrame({ width: offsetWidth, top: offsetTop, left: offsetLeft })
+                const { offsetWidth } = this.$element;
+                const { width } = this.getSizeByFrame({ width: offsetWidth})
                 this.$element.style.width = `${width}%`;
                 this.width = width;
                 // Save
@@ -142,7 +138,7 @@ export default class Banner {
                 // Save
                 window._banner = window._banner || {};
                 window._banner[this.id] = {
-                    left:_left,
+                    left: _left,
                     top: _top,
                     width: _width,
                     widthOfPosition: frameRect.width,
@@ -160,10 +156,11 @@ export default class Banner {
     }
 
     getSizeByFrame({ width, top, left }) {
+        const { offsetWidth, offsetheight } = this.$frame;
         return {
-            width: (width / this.widthOfFrame) * 100,
-            top: (top / this.heightOfFrame) * 100,
-            left: (left / this.widthOfFrame) * 100,
+            width: (width / offsetWidth) * 100,
+            top: (top / offsetheight) * 100,
+            left: (left / offsetheight) * 100,
         };
     }
 
