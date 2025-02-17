@@ -27,7 +27,7 @@ const runMapEditor = () => {
     const matrix = new Matrix({
         $frame: document.querySelector('.matrix-editor')
     });
-    // matrix.registerEvent();
+    matrix.registerEvent();
 }
 
 const runAnimation = () => {
