@@ -6,7 +6,7 @@ export default class Banner {
             left,
             top,
             id || new Date().getTime(),
-            widthOfPosition || clientRect.width,
+            widthOfPosition,
             width
         );
         this.initDOM();
